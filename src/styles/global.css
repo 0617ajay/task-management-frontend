@@ -1,0 +1,40 @@
+:root{
+  --brand:#0d6efd; /* blue */
+  --bg:#ffffff;
+  --muted:#6c757d;
+  --card-shadow: 0 6px 18px rgba(13,110,253,0.06);
+}
+
+body{
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  color: #0b1a2b;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Container tweaks */
+main.container {
+  max-width:1200px;
+}
+
+/* Card */
+.card {
+  border: none;
+  box-shadow: var(--card-shadow);
+  border-radius: 12px;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(90deg,var(--brand), #2563eb);
+  border: none;
+  box-shadow: 0 4px 12px rgba(13,110,253,0.12);
+}
+
+/* small screens */
+@media (max-width:576px){
+  h2 { font-size:1.3rem; }
+}
+
+/* Blue headings */
+.text-primary { color: var(--brand) !important; }
