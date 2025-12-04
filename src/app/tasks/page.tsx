@@ -35,10 +35,8 @@ export default function TasksPage() {
           <Col md={3}>
             <Form.Select value={status || ''} onChange={(e)=>setStatus(e.target.value || undefined)}>
               <option value="">All status</option>
-              <option>TODO</option>
-              <option>IN_PROGRESS</option>
-              <option>DONE</option>
-              <option>ARCHIVED</option>
+              <option value={"NEW"}>New</option>
+              <option value={"DONE"}>Done</option>
             </Form.Select>
           </Col>
           <Col md={3} className="text-md-end">
