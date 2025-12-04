@@ -6,6 +6,7 @@ import TaskCard from '@/components/TaskCard';
 import TaskFormModal from '@/components/TaskFormModal';
 import { useTasks } from '@/hooks/useTask';
 import ProtectedRoute from '@/components/ProtectedRoutes';
+import Pagination from '@/components/Pagination';
 
 export default function TasksPage() {
   const [showCreate, setShowCreate] = useState(false);
@@ -13,8 +14,9 @@ export default function TasksPage() {
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
+  const limit = 9;
 
-  const { data, isLoading, toggleTask, deleteTask, refetch } = useTasks({ page, limit: 9, status, q });
+  const { data, isLoading, toggleTask, deleteTask, refetch } = useTasks({ page, limit, status, q });
   return (
     <ProtectedRoute>
       <Container>
@@ -59,7 +61,7 @@ export default function TasksPage() {
           ))}
         </Row>
 
-        <div className="d-flex justify-content-center mt-4">
+        {/* <div className="d-flex justify-content-center mt-4">
           <nav>
             <ul className="pagination">
               <li className={`page-item ${page<=1?'disabled':''}`}><button className="page-link" onClick={()=>setPage(p=>Math.max(1,p-1))}>Prev</button></li>
@@ -67,7 +69,15 @@ export default function TasksPage() {
               <li className={`page-item ${data && page>=Math.ceil(data.total/data.limit)?'disabled':''}`}><button className="page-link" onClick={()=>setPage(p=>p+1)}>Next</button></li>
             </ul>
           </nav>
-        </div>
+        </div> */}
+
+        <Pagination
+          page={page}
+          limit={limit}
+          total={data?.total || 0}
+          onPageChange={setPage}
+        />
+
 
         <TaskFormModal show={showCreate} task={selectedTask} onClose={()=>{setSelectedTask(undefined); setShowCreate(false)}} refetch={()=>{ setSelectedTask(undefined); setShowCreate(false); refetch(); }} />
       </Container>
