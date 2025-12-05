@@ -50,7 +50,7 @@ export default function LoginPage() {
 
                 <div className="d-grid mb-2">
                   <Button type="submit" variant="primary" disabled={loading}>
-                    {loading ? 'Signing in…' : 'Sign in'}
+                    {loading ? 'Logging in…' : 'Log in'}
                   </Button>
                 </div>
 
