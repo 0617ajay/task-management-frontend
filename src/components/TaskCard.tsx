@@ -9,7 +9,6 @@ export default function TaskCard({ task, onToggle, onDelete, onEdit }: any) {
       <Card.Body className="d-flex flex-column">
         <div className="d-flex justify-content-between align-items-start mb-2">
           <Card.Title className="h6 mb-0">{task.title}</Card.Title>
-          <small className="text-muted status-title">{task.status}</small>
         </div>
         <Card.Text className="grow text-muted">
           {task.description || <span className="text-secondary">No description</span>}

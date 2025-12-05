@@ -70,7 +70,7 @@ export default function TopNav() {
                     </Nav.Link>
                   </>
                 )}
-                {user && ( <>
+                {user && !isLoginPage && ( <>
                     <div className='fs-5 status-title'><strong>{user.name.toUpperCase()}</strong></div>
                     <div className='fs-6 fw-medium'><small>{user.email}</small></div>
                     <hr />
@@ -91,7 +91,7 @@ export default function TopNav() {
                 <Nav.Link as={Link} href="/register">Register</Nav.Link>
               </>
             )}
-            {user && (
+            {user && !isLoginPage && (
               <NavDropdown
                 title={user.name.charAt(0).toUpperCase()}
                 id="user-dropdown"
