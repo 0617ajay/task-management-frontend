@@ -17,6 +17,12 @@ main.container {
   max-width:1200px;
 }
 
+.container,
+.container-fluid {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
 /* Card */
 .card {
   border: none;

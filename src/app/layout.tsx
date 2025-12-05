@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <AuthProvider>
           <ToastProvider>
             <TopNav />
-            <main className="container py-4" style={{ paddingTop: "80px" }}>{children}</main>
+            <main className="">{children}</main>
           </ToastProvider>
           </AuthProvider>
         </ReactQueryProvider>

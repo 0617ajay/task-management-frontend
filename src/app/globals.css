@@ -5,6 +5,12 @@
   --foreground: #171717;
 }
 
+.container,
+.container-fluid {
+  margin-left: 10px !important;
+  padding-right: 10px !important;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
