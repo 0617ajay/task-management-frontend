@@ -16,7 +16,7 @@ export default function Pagination({ page, limit, total, onPageChange }: Paginat
   const getPages = () => {
     const pages: (number | "...")[] = [];
 
-    if (totalPages <= 2) {
+    if (totalPages <= 4) {
       // Show all pages
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
