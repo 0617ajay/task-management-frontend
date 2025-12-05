@@ -53,6 +53,7 @@ api.interceptors.response.use(
       } catch (refreshErr) {
         processQueue(refreshErr, undefined);
         clearAccessToken();
+        window.location.href = '/login';
         throw refreshErr;
       } finally {
         isRefreshing = false;
