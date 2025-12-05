@@ -38,3 +38,11 @@ main.container {
 
 /* Blue headings */
 .text-primary { color: var(--brand) !important; }
+
+.status-title {
+  text-transform: lowercase;
+}
+
+.status-title::first-letter {
+  text-transform: uppercase;
+}
