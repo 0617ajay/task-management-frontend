@@ -52,6 +52,7 @@ export default function TasksPage() {
           {data?.tasks?.map((task:any)=>(
             <Col key={task.id}>
               <TaskCard
+                key={task.id}
                 task={task}
                 onToggle={() => toggleTask(task.id)}
                 onDelete={() => deleteTask(task.id)}
@@ -61,15 +62,6 @@ export default function TasksPage() {
           ))}
         </Row>
 
-        {/* <div className="d-flex justify-content-center mt-4">
-          <nav>
-            <ul className="pagination">
-              <li className={`page-item ${page<=1?'disabled':''}`}><button className="page-link" onClick={()=>setPage(p=>Math.max(1,p-1))}>Prev</button></li>
-              <li className="page-item disabled"><span className="page-link">Page {page}</span></li>
-              <li className={`page-item ${data && page>=Math.ceil(data.total/data.limit)?'disabled':''}`}><button className="page-link" onClick={()=>setPage(p=>p+1)}>Next</button></li>
-            </ul>
-          </nav>
-        </div> */}
 
         <Pagination
           page={page}
