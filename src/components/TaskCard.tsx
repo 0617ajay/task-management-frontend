@@ -11,12 +11,12 @@ export default function TaskCard({ task, onToggle, onDelete, onEdit }: any) {
           <Card.Title className="h6 mb-0">{task.title}</Card.Title>
           <small className="text-muted status-title">{task.status}</small>
         </div>
-        <Card.Text className="flex-grow-1 text-muted">
+        <Card.Text className="grow text-muted">
           {task.description || <span className="text-secondary">No description</span>}
         </Card.Text>
 
         <div className="d-flex justify-content-between align-items-center mt-3">
-          <small className="text-muted">{formatDistanceToNow(new Date(task.createdAt))} ago</small>
+          <small className="text-muted">Last Update : {formatDistanceToNow(new Date(task.updatedAt))} ago</small>
 
           <div className="d-flex align-items-center">
             <Dropdown align="end">

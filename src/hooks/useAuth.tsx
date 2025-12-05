@@ -1,11 +1,28 @@
-// src/hooks/useAuth.ts
+// src/context/AuthContext.tsx
 'use client';
-import { useState } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import api from '../lib/api';
 import { setAccessToken, clearAccessToken } from '../lib/auth';
 
-export function useAuth() {
-  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  setUser: (user: User | null) => void;
+  login: (email: string, password: string) => Promise<User>;
+  register: (payload: { email: string; password: string; name?: string }) => Promise<any>;
+  logout: () => Promise<void>;
+  refresh: () => Promise<string>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
 
   async function login(email: string, password: string) {
     const res = await api.post('/auth/login', { email, password });
@@ -36,5 +53,16 @@ export function useAuth() {
     return token;
   }
 
-  return { user, setUser, login, register, logout, refresh };
+  return (
+    <AuthContext.Provider value={{ user, setUser, login, register, logout, refresh }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+// Custom hook for easier usage
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used inside AuthProvider');
+  return context;
 }

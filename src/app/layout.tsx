@@ -5,6 +5,7 @@ import TopNav from '@/components/TopNav';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ReactNode } from 'react';
 import ReactQueryProvider from './providers/ReactQUeryProvider';
+import { AuthProvider } from '@/hooks/useAuth';
 
 export const metadata = {
   title: 'Task Manager',
@@ -16,10 +17,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <ReactQueryProvider>
+          <AuthProvider>
           <ToastProvider>
             <TopNav />
-            <main className="container py-4">{children}</main>
+            <main className="container py-4" style={{ paddingTop: "80px" }}>{children}</main>
           </ToastProvider>
+          </AuthProvider>
         </ReactQueryProvider>
       </body>
     </html>

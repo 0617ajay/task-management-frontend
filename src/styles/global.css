@@ -46,3 +46,78 @@ main.container {
 .status-title::first-letter {
   text-transform: uppercase;
 }
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(0,0,0,0.08);
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.4),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+.nav-show {
+  transform: translateY(0);
+  transition: transform 0.25s ease-in-out;
+}
+
+.nav-hide {
+  transform: translateY(-100%);
+  transition: transform 0.25s ease-in-out;
+}
+
+/* Improve dropdown click target */
+.dropdown-toggle {
+  cursor: pointer !important;
+}
+
+@media (min-width: 768px) {
+  .offcanvas-md {
+    display: none !important;
+  }
+}
+
+/* Hide offcanvas entirely on large screens */
+@media (min-width: 992px) {
+  .mobile-nav {
+    display: none !important;
+  }
+}
+
+/* Hide desktop navbar entirely on small screens */
+@media (max-width: 991px) {
+  .desktop-nav {
+    display: none !important;
+  }
+}
+

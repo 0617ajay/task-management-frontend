@@ -1,6 +1,6 @@
 // src/components/TopNav.tsx
 'use client';
-import { Navbar, Container, Nav, Button } from 'react-bootstrap';
+import { Navbar, Container, Nav, NavDropdown, Button, Dropdown, Image, Offcanvas  } from 'react-bootstrap';
 import Link from 'next/link';
 import { useAuth } from '../hooks/useAuth';
 import React, { useEffect, useState } from 'react';
@@ -11,29 +11,107 @@ export default function TopNav() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [userLoaded, setUserLoaded] = useState(false);
+    const [showOffcanvas, setShowOffcanvas] = useState(false);
+
+
   // is user on login or register page?
  const isLoginPage = pathname === '/login' || pathname === '/register';
 
-  useEffect(() => {
-    console.log('User state changed:', user);
-    if (user) {
-      setUserLoaded(true);
-    }}, [useAuth().user]);
+ const handleLogout = async () => {
+    await logout();
+    // redirect to login page
+    window.location.href = '/login';
+  };
+
+//   useEffect(() => {
+//   const handleResize = () => {
+//     if (window.innerWidth >= 768) {
+//       setShowOffcanvas(false);
+//     }
+//   };
+//   window.addEventListener("resize", handleResize);
+//   return () => window.removeEventListener("resize", handleResize);
+// }, []);
+ 
 
   return (
-    <Navbar bg="light" expand="lg" className="border-bottom mb-3">
-      <Container>
-        <Navbar.Brand as={Link} href="/" className="text-primary fw-bold">Task Manager</Navbar.Brand>
-        <Navbar.Toggle />
-        <Navbar.Collapse className="justify-content-end">
-          <Nav>
-            {userLoaded && <Nav.Link as={Link} href="/login">Login</Nav.Link>}
-            {userLoaded && <Nav.Link as={Link} href="/register">Register</Nav.Link>}
-            {!(userLoaded || isLoginPage) && <Button variant="outline-primary" onClick={async ()=> { await logout(); router.push('/login'); }}>Logout</Button>}
+    <>
+      <Navbar bg="light" expand="lg" fixed="top" className="border-bottom">
+        <Container fluid>
+          <Navbar.Brand as={Link} href="/" className="text-primary fw-bold">
+            Task Manager
+          </Navbar.Brand>
+
+          <Navbar.Toggle 
+              aria-controls="offcanvasNavbar" 
+              onClick={() => setShowOffcanvas(true)} 
+          />
+
+          <Navbar.Offcanvas
+            id="offcanvasNavbar"
+            aria-labelledby="offcanvasNavbarLabel"
+            placement="end"
+            show={showOffcanvas}
+            onHide={() => setShowOffcanvas(false)}
+            className="mobile-nav"
+          >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title id="offcanvasNavbarLabel">Profile</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body className={!showOffcanvas ? "d-none" : ""}>
+              <Nav className="justify-content-end flex-3 pe-3 mobile-nav">
+                {(!isLoginPage && !user) && (
+                  <>
+                    <Nav.Link as={Link} href="/login">
+                      Login
+                    </Nav.Link>
+                    <Nav.Link as={Link} href="/register">
+                      Register
+                    </Nav.Link>
+                  </>
+                )}
+                {user && ( <>
+                    <div className='fs-5 status-title'><strong>{user.name.toUpperCase()}</strong></div>
+                    <div className='fs-6 fw-medium'><small>{user.email}</small></div>
+                    <hr />
+                    <Button size="sm" onClick={handleLogout} className=" btn-secondary btn-bg-secondary">
+                      Logout
+                    </Button>
+                  </>
+                )}
+              </Nav>
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
+
+          {/* Desktop links (hidden on small screens) */}
+          <Nav className="d-none d-lg-flex ms-auto desktop-nav">
+            {!isLoginPage && !user && (
+              <>
+                <Nav.Link as={Link} href="/login">Login</Nav.Link>
+                <Nav.Link as={Link} href="/register">Register</Nav.Link>
+              </>
+            )}
+            {user && (
+              <NavDropdown
+                title={user.name.charAt(0).toUpperCase()}
+                id="user-dropdown"
+                align="end"
+              >
+                <NavDropdown.ItemText className='fs-5 status-title'><strong>{user.name.toUpperCase()}</strong></NavDropdown.ItemText>
+                <NavDropdown.ItemText className='fs-6 fw-medium'><small>{user.email}</small></NavDropdown.ItemText>                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={handleLogout} className="text-danger">
+                  Logout
+                </NavDropdown.Item>
+              </NavDropdown>
+            )}
           </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+        </Container>
+      </Navbar>
+
+      {/* Add spacing so content is not hidden under fixed navbar */}
+      <div style={{ height: '70px' }} />
+    </>
   );
 }
+
+

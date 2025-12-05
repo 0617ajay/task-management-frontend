@@ -31,12 +31,12 @@ export default function LoginPage() {
   }
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '70vh' }}>
+    <Container className="d-flex justify-content-center align-items-center " style={{ minHeight: '70vh' }}>
       <Row className="w-100">
         <Col md={{ span: 6, offset: 3 }}>
           <Card className="shadow-sm">
             <Card.Body>
-              <h3 className="mb-3 text-primary">Sign in</h3>
+              <h3 className="mb-3 text-primary">Log in</h3>
               <Form onSubmit={onSubmit}>
                 <Form.Group className="mb-3" controlId="email">
                   <Form.Label>Email</Form.Label>
@@ -56,7 +56,7 @@ export default function LoginPage() {
 
                 <div className="text-center">
                   <small>
-                    Don't have an account? <Link href="/register">Register</Link>
+                    Don't have an account? <Link href="/register" aria-disabled = {loading}>Register</Link>
                   </small>
                 </div>
               </Form>
