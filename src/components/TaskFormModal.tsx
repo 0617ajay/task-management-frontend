@@ -1,75 +1,3 @@
-// // src/components/TaskFormModal.tsx
-// 'use client';
-// import { Modal, Button, Form } from 'react-bootstrap';
-// import { useForm } from 'react-hook-form';
-// import api from '../lib/api';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { z } from 'zod';
-// import { useToast } from './ToasterProvider';
-
-// const schema = z.object({
-//   title: z.string().min(1),
-//   description: z.string().optional(),
-//   status: z.enum(['TODO','IN_PROGRESS','DONE','ARCHIVED']).optional(),
-// });
-
-// type FormData = z.infer<typeof schema>;
-
-// export default function TaskFormModal({ show = false, onHide, onSaved, initial }: any) {
-//   const toast = useToast();
-//   const { register, handleSubmit, reset } = useForm<FormData>({ resolver: zodResolver(schema), defaultValues: initial || {} });
-
-//   async function onSubmit(data: FormData) {
-//     try {
-//       if (initial?.id) {
-//         await api.patch(`/tasks/${initial.id}`, data);
-//         toast.success('Updated');
-//       } else {
-//         await api.post('/tasks', data);
-//         toast.success('Created');
-//       }
-//       onSaved?.();
-//       reset();
-//     } catch (err: any) {
-//       toast.error(err?.response?.data?.message || 'Save failed');
-//     }
-//   }
-
-//   return (
-//     <Modal show={show} onHide={onHide} centered>
-//       <Form onSubmit={handleSubmit(onSubmit)}>
-//         <Modal.Header closeButton>
-//           <Modal.Title>{initial ? 'Edit Task' : 'New Task'}</Modal.Title>
-//         </Modal.Header>
-//         <Modal.Body>
-//           <Form.Group className="mb-2">
-//             <Form.Label>Title</Form.Label>
-//             <Form.Control {...register('title')} />
-//           </Form.Group>
-//           <Form.Group className="mb-2">
-//             <Form.Label>Description</Form.Label>
-//             <Form.Control {...register('description')} as="textarea" rows={3} />
-//           </Form.Group>
-//           <Form.Group>
-//             <Form.Label>Status</Form.Label>
-//             <Form.Select {...register('status')} defaultValue={initial?.status || 'TODO'}>
-//               <option value="TODO">TODO</option>
-//               <option value="IN_PROGRESS">IN PROGRESS</option>
-//               <option value="DONE">DONE</option>
-//               <option value="ARCHIVED">ARCHIVED</option>
-//             </Form.Select>
-//           </Form.Group>
-//         </Modal.Body>
-//         <Modal.Footer>
-//           <Button variant="secondary" onClick={onHide}>Cancel</Button>
-//           <Button type="submit" variant="primary">Save</Button>
-//         </Modal.Footer>
-//       </Form>
-//     </Modal>
-//   );
-// }
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -92,56 +20,88 @@ export default function TaskFormModal({
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  /** 🔄 RESET FORM */
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setError("");
+    setLoading(false);
+  };
 
   /** 🟦 Load task data when editing */
   useEffect(() => {
-    if (task) {
-      setTitle(task.title);
-      setDescription(task.description ?? "");
-    } else {
-      setTitle("");
-      setDescription("");
+    if (show) {
+      if (task) {
+        setTitle(task.title);
+        setDescription(task.description ?? "");
+      } else {
+        resetForm();
+      }
     }
-  }, [task]);
+  }, [show, task]);
 
   const handleSubmit = async () => {
+    // Validation
+    if (title.trim().length < 5) {
+      setError("Title must be at least 5 characters long");
+      return;
+    }
+
+    setLoading(true);
+
     try {
       const payload = { title, description };
 
-      /** 🟦 EDIT mode */
-      if (task && task.id) {
+      if (task?.id) {
         await api.patch(`/tasks/${task.id}`, payload);
-        toast.success("Task updated!");
-      }
-      /** 🟩 CREATE mode */
-      else {
+        toast.success("Task updated successfully!");
+      } else {
         await api.post("/tasks", payload);
-        toast.success("Task created!");
+        toast.success("Task added successfully!");
       }
 
       refetch();
+      resetForm();
       onClose();
-    } catch (error) {
-      toast.error("Something went wrong");
-      console.error(error);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Something went wrong");
+      console.error(err);
+      setLoading(false);
     }
   };
 
+  /** Cancel → reset form + close */
+  const handleCancel = () => {
+    resetForm();
+    onClose();
+  };
+
   return (
-    <Modal show={show} onHide={onClose} centered>
+    <Modal show={show} onHide={handleCancel} centered>
       <Modal.Header closeButton>
-        <Modal.Title>{task ? "Edit Task" : "Create Task"}</Modal.Title>
+        <Modal.Title>{task ? "Edit Task" : "Save Task"}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <Form>
           <Form.Group className="mb-3">
-            <Form.Label>Title</Form.Label>
+            <Form.Label>
+              Title <span className="text-danger">*</span>
+            </Form.Label>
             <Form.Control
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              isInvalid={!!error}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setError("");
+              }}
               placeholder="Enter task title"
+              disabled={loading}
             />
+            {error && <Form.Text className="text-danger">{error}</Form.Text>}
           </Form.Group>
 
           <Form.Group>
@@ -152,18 +112,19 @@ export default function TaskFormModal({
               as="textarea"
               rows={3}
               placeholder="Enter description"
+              disabled={loading}
             />
           </Form.Group>
         </Form>
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
+        <Button variant="secondary" onClick={handleCancel} disabled={loading}>
           Cancel
         </Button>
 
-        <Button variant="primary" onClick={handleSubmit}>
-          {task ? "Update Task" : "Create Task"}
+        <Button variant="primary" onClick={handleSubmit} disabled={loading}>
+          {loading ? (task ? "Updating…" : "Adding…") : task ? "Update" : "Add"}
         </Button>
       </Modal.Footer>
     </Modal>

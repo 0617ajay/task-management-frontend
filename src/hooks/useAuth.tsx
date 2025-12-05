@@ -25,11 +25,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   async function login(email: string, password: string) {
-    const res = await api.post('/auth/login', { email, password });
-    const { accessToken, user } = res.data.data;
-    setAccessToken(accessToken);
-    setUser(user);
-    return user;
+    try {
+          const res = await api.post('/auth/login', { email, password });
+          const { accessToken, user } = res.data.data;
+          setAccessToken(accessToken);
+          setUser(user);
+          return user;
+    } catch (error) {
+      throw error;
+    }
+
   }
 
   async function register(payload: { email: string; password: string; name?: string }) {

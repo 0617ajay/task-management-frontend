@@ -12,7 +12,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import TaskSkeleton from '@/components/TaskSkeleton';
 import { useResponsiveSkeleton } from '@/hooks/useResponsiveSkeleton';
 
-const limit = 6;
+const limit = 9;
 
 export default function TasksPage() {
   const [showCreate, setShowCreate] = useState(false);
@@ -133,7 +133,7 @@ export default function TasksPage() {
 
               {/* Task Cards */}
               {!isLoading &&
-                data?.tasks?.map((task) => (
+                data?.tasks?.map((task: any) => (
                   <Col key={task.id}>
                     <TaskCard
                       task={task}
