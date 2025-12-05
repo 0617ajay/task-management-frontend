@@ -19,19 +19,8 @@ export default function TopNav() {
 
  const handleLogout = async () => {
     await logout();
-    // redirect to login page
     window.location.href = '/login';
   };
-
-//   useEffect(() => {
-//   const handleResize = () => {
-//     if (window.innerWidth >= 768) {
-//       setShowOffcanvas(false);
-//     }
-//   };
-//   window.addEventListener("resize", handleResize);
-//   return () => window.removeEventListener("resize", handleResize);
-// }, []);
  
 
   return (

@@ -79,7 +79,7 @@ export default function LoginPage() {
                 
                 {/* Email Field */}
                 <Form.Group className="mb-3" controlId="email">
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>Email <span className="text-danger">*</span></Form.Label>
                   <Form.Control
                     type="email"
                     value={email}
@@ -97,7 +97,7 @@ export default function LoginPage() {
 
                 {/* Password Field */}
                 <Form.Group className="mb-3" controlId="password">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>Password <span className="text-danger">*</span></Form.Label>
                   <Form.Control
                     type="password"
                     value={password}
